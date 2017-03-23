@@ -8,16 +8,30 @@
 
 import Foundation
 
+let data: Data = Data()
+let json = ["name": "hh"];
+
+class User: NSObject {
+    var name = ""
+}
+
+let a = (data ~> User.self)!
+
+let array: [Any] = []
+let os = (array => User.self)!
+
 
 infix operator ~>
 
 @discardableResult
+/// transform json or Data to a model object
 func ~><T: NSObject>(lhs: Any, rhs: T.Type) -> T? {
     
     if let data = lhs as? Data {
         if let json = (try? JSONSerialization.jsonObject(with: data, options: [])) as? [String : Any] {
-            let model: T = convert(json, to: T.self) as! T
-            return model
+            
+            return convert(json, to: T.self) as? T
+            
         }
     }
     
@@ -26,12 +40,23 @@ func ~><T: NSObject>(lhs: Any, rhs: T.Type) -> T? {
         return nil
     }
     
-    let model: T = convert(dict, to: T.self) as! T
-    return model
+    return convert(dict, to: T.self) as? T
 }
 
+
+infix operator =>
+
 @discardableResult
-func ~><T: NSObject>(lhs: Any, rhs: T.Type) -> [T]? {
+/// transform json or Data to an Array object
+func =><T: NSObject>(lhs: Any, rhs: T.Type) -> [T]? {
+    
+    if let data = lhs as? Data {
+        if let array = (try? JSONSerialization.jsonObject(with: data, options: [])) as? [Any] {
+
+            return array.flatMap { $0 ~> rhs }
+            
+        }
+    }
     
     guard let array = lhs as? [Any] else {
         print("Can't convert \(lhs) to [Any].")

@@ -7,12 +7,24 @@
 //
 
 import UIKit
+import ModelSwift
+
+class User: NSObject {
+}
 
 class ViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
+        
+//        let data: Data = Data()
+//        let json = ["name": "hh"];
+//        
+//        let o = (json ~> User.self)!
+//        
+//        let array: [Any] = []
+//        let os = (array => User.self)!
     }
 
     override func didReceiveMemoryWarning() {
