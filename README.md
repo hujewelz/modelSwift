@@ -6,7 +6,14 @@
 [![Platform](https://img.shields.io/cocoapods/p/ModelSwift.svg?style=flat)](http://cocoapods.org/pods/ModelSwift)
 
 ## Example
+When we got the data from our server, we can use ModelSwift to transform it to model:
+```swift
+guard let json = response.result.value as? [Any] else {
+    return
+}
 
+let repos: [Repos] = (json ~> Repos.self)!
+```
 To run the example project, clone the repo, and run `pod install` from the Example directory first.
 
 ## Requirements
