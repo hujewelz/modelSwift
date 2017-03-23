@@ -22,7 +22,7 @@ pod "ModelSwift"
 
 ## Author
 
-huluobobo, hujewelz@163.com
+hujewelz, hujewelz@163.com
 
 ## License
 

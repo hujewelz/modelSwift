@@ -1,0 +1,16 @@
+PODS:
+  - ModelSwift (0.1.0)
+
+DEPENDENCIES:
+  - ModelSwift (from `../`)
+
+EXTERNAL SOURCES:
+  ModelSwift:
+    :path: ../
+
+SPEC CHECKSUMS:
+  ModelSwift: 3da5d53054e90e4ff58c8798af239650ef46e561
+
+PODFILE CHECKSUM: 8f4388414ca77932c7b37758d76e85ba260abde6
+
+COCOAPODS: 1.2.0

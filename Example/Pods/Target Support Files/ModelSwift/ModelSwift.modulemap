@@ -1,0 +1,6 @@
+framework module ModelSwift {
+  umbrella header "ModelSwift-umbrella.h"
+
+  export *
+  module * { export * }
+}
