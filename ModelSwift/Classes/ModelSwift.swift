@@ -1,85 +1,75 @@
 //
-//  Dictionary-toModel.swift
-//  Firefly
+//  ViewController.swift
+//  ModelSwift
 //
-//  Created by jewelz on 2017/3/22.
-//  Copyright © 2017年 hujewelz. All rights reserved.
+//  Created by huluobobo on 03/23/2017.
+//  Copyright (c) 2017 hujewelz. All rights reserved.
 //
 
 import Foundation
 
-let data: Data = Data()
-let json = ["name": "hh"];
-
-class User: NSObject {
-    var name = ""
-}
-
-let a = (data ~> User.self)!
-
-let array: [Any] = []
-let os = (array => User.self)!
-
 
 infix operator ~>
 
-@discardableResult
 /// transform json or Data to a model object
-func ~><T: NSObject>(lhs: Any, rhs: T.Type) -> T? {
+
+@discardableResult public func ~><T: NSObject>(lhs: Any, rhs: T.Type) -> T? {
     
-    if let data = lhs as? Data {
-        if let json = (try? JSONSerialization.jsonObject(with: data, options: [])) as? [String : Any] {
-            
-            return convert(json, to: T.self) as? T
-            
-        }
+    if let data = lhs as? Data, let json = (try? JSONSerialization.jsonObject(with: data, options: [])) as? [String : Any] {
+        
+        return convert(json, to: T.self) as? T
+        
+    } else if let dict = lhs as? [String: Any]  {
+        
+        return convert(dict, to: T.self) as? T
+        
     }
     
-    guard let dict = lhs as? [String: Any] else {
-        print("Can't convert \(lhs) to [String: Any].")
-        return nil
-    }
-    
-    return convert(dict, to: T.self) as? T
+    print("Can't convert \(lhs) to [String: Any].")
+    return nil
 }
 
 
 infix operator =>
 
-@discardableResult
 /// transform json or Data to an Array object
-func =><T: NSObject>(lhs: Any, rhs: T.Type) -> [T]? {
-    
-    if let data = lhs as? Data {
-        if let array = (try? JSONSerialization.jsonObject(with: data, options: [])) as? [Any] {
 
-            return array.flatMap { $0 ~> rhs }
-            
-        }
+@discardableResult public func =><T: NSObject>(lhs: Any, rhs: T.Type) -> [T]? {
+    
+    if let data = lhs as? Data, let array = (try? JSONSerialization.jsonObject(with: data, options: [])) as? [Any] {
+        
+        return array.flatMap { $0 ~> rhs }
+        
+    } else if let array = lhs as? [Any] {
+        
+        return array.flatMap { $0 ~> rhs }
+        
     }
     
-    guard let array = lhs as? [Any] else {
-        print("Can't convert \(lhs) to [Any].")
-        return nil
-    }
-    
-    return array.flatMap { $0 ~> rhs }
+    print("Can't convert \(lhs) to [Any].")
+    return nil
 }
 
 fileprivate func convert(_ any: Any, to classType: AnyClass) -> Any? {
     
-    if let dict = any as? [String: Any] {
+    if let dict = any as? [String: Any], !dict.isEmpty {
+        
         return convert(dict, to: classType)
-    }
-    
-    if let array = any as? [Any] {
+        
+    } else if let array = any as? [Any] {
+        
         return array.map{ convert($0, to: classType)}
+        
     }
     
     return nil
 }
 
-fileprivate func convert(_ dict: [String: Any], to classType: AnyClass) -> NSObject {
+fileprivate func convert(_ dict: [String: Any], to classType: AnyClass) -> NSObject? {
+    
+    if dict.isEmpty {
+        return nil
+    }
     
     let type = classType as! NSObject.Type
     let object = type.init()
@@ -89,7 +79,10 @@ fileprivate func convert(_ dict: [String: Any], to classType: AnyClass) -> NSObj
         
         var jsonValue: Dictionary<String, Any>.Value? = nil
         
-        if let jsonKey = object.reflectedProperty[label!] {
+    
+        
+        if let obj = object as? Replacable, let jsonKey = obj.replacedProperty[label!] {
+            print("--------Replacable")
             
             jsonValue = dict[jsonKey]
             
@@ -104,19 +97,21 @@ fileprivate func convert(_ dict: [String: Any], to classType: AnyClass) -> NSObj
             if value is NSNull { continue }
             
             // 如果 value 的值是字典
-            if let dictValue = value as? [String: Any] {
+            if let dictValue = value as? [String: Any],
+                let obj = object as? Reflectable,
+                let _classType = obj.reflectedObject[label!] {
                 
-                if let _classType = object.reflectedObject[label!] {
-                    
-                    let obj = convert(dictValue, to: _classType)
-                    object.setValue(obj, forKey: label!)
-                    
-                }
+                //print("--------Reflectable")
+                let _obj = convert(dictValue, to: _classType)
+                object.setValue(_obj, forKey: label!)
                 
-            } else if let dictValue = value as? [Any], let _classType = object.objectInArray[label!] { // 如果 value 的值是数组
+            } else if let dictValue = value as? [Any],
+                let obj  = object as? ObjectingArray,
+                let _classType = obj.objectInArray[label!] { // 如果 value 的值是数组
                 
-                let obj = dictValue.map{ convert($0, to: _classType) }
-                object.setValue(obj, forKey: label!)
+                //print("--------ObjectingArray")
+                let _obj = dictValue.map{ convert($0, to: _classType) }
+                object.setValue(_obj, forKey: label!)
                 
             } else {
                 
@@ -129,46 +124,4 @@ fileprivate func convert(_ dict: [String: Any], to classType: AnyClass) -> NSObj
     
     return object
 }
-
-protocol Reflectable: class {
-    
-    /// 将 `self` 中的属性映射为另外一个值.
-    ///
-    /// 例如我们要将 `desc` 替换为 `description`, 可以这样
-    ///
-    ///     override var reflectedProperty: [String: String] {
-    ///         return ["desc": "description"]
-    ///     }
-    ///
-    
-    var reflectedProperty: [String: String] { get }
-    
-    /// 将 `self` 中的属性映射为一个对象.
-    ///
-    /// 例如我们要将 `user` 替换为 `user` 的实例, 可以这样
-    ///
-    ///     override var reflectedObject: [String : AnyClass] {
-    ///         return ["user": User.self]
-    ///    }
-    ///
-    /// - important: 当你的类中包含另外一个对象时，要实现该方法
-    
-    var reflectedObject: [String: AnyClass] { get }
-    
-    /// 数组中包含的对象
-    var objectInArray: [String: AnyClass] { get }
-}
-
-
-
-extension NSObject: Reflectable {
-    
-    var reflectedObject: [String : AnyClass] { return [:] }
-    
-    var reflectedProperty: [String: String] { return [:] }
-    
-    var objectInArray: [String: AnyClass] { return [:] }
-    
-}
-
 

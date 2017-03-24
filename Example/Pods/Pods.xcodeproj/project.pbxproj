@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		17BEABED48B96F6C868FB86157F079B2 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CBB3DE36805AF21409EC968A9691732F /* Foundation.framework */; };
 		17FE7BED797654400FEA5E5AB293C8A8 /* Pods-ModelSwift_Tests-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 41F203EEAE4BC2DD0080ED07973207A8 /* Pods-ModelSwift_Tests-dummy.m */; };
+		514CC1121E84C80D0016B19A /* MS-Protocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 514CC1111E84C80D0016B19A /* MS-Protocol.swift */; };
 		6EA7752E42B8FF9DAE395D31181AF55D /* ModelSwift-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 119BB11564A1628529E5F303B8EF4797 /* ModelSwift-dummy.m */; };
 		7B03C29334FB9D50286CA4737860C5C3 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CBB3DE36805AF21409EC968A9691732F /* Foundation.framework */; };
 		7BE3A5C8BB0287CD574D5641AFAFF322 /* Pods-ModelSwift_Example-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 0C522A580CCEF46D534BCF978E8FB43F /* Pods-ModelSwift_Example-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -41,6 +42,7 @@
 		3F709EFEC59507C688D8A7EE9CF625E0 /* Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		41F203EEAE4BC2DD0080ED07973207A8 /* Pods-ModelSwift_Tests-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "Pods-ModelSwift_Tests-dummy.m"; sourceTree = "<group>"; };
 		4AEDFF9C9CCCF950EDFEB8DA0842D7D7 /* Pods-ModelSwift_Tests.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = "sourcecode.module-map"; path = "Pods-ModelSwift_Tests.modulemap"; sourceTree = "<group>"; };
+		514CC1111E84C80D0016B19A /* MS-Protocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "MS-Protocol.swift"; sourceTree = "<group>"; };
 		5CDBF07FF4D9F2FFF97A9BF2EB210A8B /* Pods-ModelSwift_Tests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-ModelSwift_Tests.release.xcconfig"; sourceTree = "<group>"; };
 		74C0531B6AD4C475046A9104EBD79404 /* Pods-ModelSwift_Example-acknowledgements.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-ModelSwift_Example-acknowledgements.plist"; sourceTree = "<group>"; };
 		7F6311DD4F6447C714546198DCE11978 /* Pods_ModelSwift_Tests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ModelSwift_Tests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -110,6 +112,7 @@
 			isa = PBXGroup;
 			children = (
 				E45040E237DA1624DD7D5B001D856575 /* ModelSwift.swift */,
+				514CC1111E84C80D0016B19A /* MS-Protocol.swift */,
 			);
 			path = Classes;
 			sourceTree = "<group>";
@@ -339,6 +342,7 @@
 			files = (
 				6EA7752E42B8FF9DAE395D31181AF55D /* ModelSwift-dummy.m in Sources */,
 				EAF79E3370E535F43B162FD77F6BC9B5 /* ModelSwift.swift in Sources */,
+				514CC1121E84C80D0016B19A /* MS-Protocol.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
