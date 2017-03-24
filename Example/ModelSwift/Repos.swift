@@ -13,11 +13,12 @@ class Repos: NSObject {
     var title: String?
     var owner: User?
     var viewers: [User]?
+    var images: [NSString]?
     
     private lazy var viewsLog: String = { [unowned self] in
         var log = "["
         
-        guard let views = self.viewers else {
+        guard let views = self.viewers, self is ObjectingArray else {
             return log + "]"
         }
         for user in views {
@@ -28,18 +29,22 @@ class Repos: NSObject {
     }()
     
     override var description: String {
-        return "title: \(title ?? ""),\nowner: {\(owner!)},\nviewers: \(viewsLog)"
+        return "title: \(title ?? ""),\nowner: {\(owner!)},\nviewers: \(viewsLog),\nimage:\(images!)"
     }
 }
 
-extension Repos: Reflectable, ObjectingArray {
+extension Repos: Reflectable {
     
     var reflectedObject: [String : AnyClass] {
         return ["owner": User.self]
     }
+
+}
+
+extension Repos: ObjectingArray {
     
     var objectInArray: [String : AnyClass] {
-        return ["viewers": User.self]
+        return ["viewers": User.self, "images": NSString.self]
     }
     
 }

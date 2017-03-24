@@ -1,8 +1,8 @@
 //
-//  ViewController.swift
+//  ModelSwift.swift
 //  ModelSwift
 //
-//  Created by hujewelz on 03/23/2017.
+//  Created by jewelz on 03/23/2017.
 //  Copyright (c) 2017 hujewelz. All rights reserved.
 //
 
@@ -62,7 +62,7 @@ fileprivate func convert(_ any: Any, to classType: AnyClass) -> Any? {
         
     }
     
-    return nil
+    return any
 }
 
 fileprivate func convert(_ dict: [String: Any], to classType: AnyClass) -> NSObject? {
@@ -71,7 +71,10 @@ fileprivate func convert(_ dict: [String: Any], to classType: AnyClass) -> NSObj
         return nil
     }
     
-    let type = classType as! NSObject.Type
+    // 只有 NSObject 的子类才能动态创建一个对象
+    guard let type = classType as? NSObject.Type else {
+        return nil
+    }
     let object = type.init()
     let mirror = Mirror(reflecting: object)
     
@@ -107,12 +110,13 @@ fileprivate func convert(_ dict: [String: Any], to classType: AnyClass) -> NSObj
                 let _classType = obj.objectInArray[label!] { // 如果 value 的值是数组
                 
                 //print("--------ObjectingArray")
-                let _obj = dictValue.map{ convert($0, to: _classType) }
+                let _obj = dictValue.flatMap{ convert($0, to: _classType) }
                 object.setValue(_obj, forKey: label!)
                 
             } else {
                 
                 object.setValue(value , forKey: label!)
+                
             }
             
         }
