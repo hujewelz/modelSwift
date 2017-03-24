@@ -12,6 +12,7 @@ import ModelSwift
 class U {
     var name = "U"
     var u = 11
+    var arr = [1, 2, 3]
 }
 
 class ViewController: UIViewController {
@@ -43,13 +44,12 @@ class ViewController: UIViewController {
         }
         
         print(repos)
+        print("\n")
         
         guard let viewers  = viewers => User.self else {
             return
         }
         print("\(viewers)")
-        //print("number of viewers: \(viewers.count)")
-        
         
         //let t = Type.type(User.self)
         //print(t.value!)
@@ -58,12 +58,18 @@ class ViewController: UIViewController {
 //        let type = t.value! as? NSObject.Type
 //        let u = type?.init()
 //        
-        let types = propertyType(of: U())
+//        let types = propertyType(of: U())
+//        
+//        for (lab, val) in types {
+//            print("\(lab!): \(val)")
+//        }
         
-        for (lab, val) in types {
-            print("\(lab!): \(val)")
-        }
-        
+//        let type = Anything(reflecting: U())
+//        print(type.this)
+//        
+//        for (lab, val) in type.children {
+//            print("\(lab!): \(val)")
+//        }
     }
 
     override func didReceiveMemoryWarning() {
@@ -71,23 +77,23 @@ class ViewController: UIViewController {
         // Dispose of any resources that can be recreated.
     }
     
-    func subjectType(of subject: Any) -> Any.Type {
-        let mirror = Mirror(reflecting: subject)
-        return mirror.subjectType
-    }
-    
-    func propertyType(of subject: Any) -> [(String?, Any.Type)]{
-        let mirror = Mirror(reflecting: subject)
-        
-        var types = [(String?, Any.Type)]()
-        
-        for (lab, value) in mirror.children {
-            let v = (lab, subjectType(of: value))
-            types.append(v)
-        }
-        
-        return types
-    }
-
+//    func subjectType(of subject: Any) -> Any.Type {
+//        let mirror = Mirror(reflecting: subject)
+//        return mirror.subjectType
+//    }
+//    
+//    func propertyType(of subject: Any) -> [(String?, Any.Type)]{
+//        let mirror = Mirror(reflecting: subject)
+//        
+//        var types = [(String?, Any.Type)]()
+//        
+//        for (lab, value) in mirror.children {
+//            let v = (lab, subjectType(of: value))
+//            types.append(v)
+//        }
+//        
+//        return types
+//    }
+//
 }
 

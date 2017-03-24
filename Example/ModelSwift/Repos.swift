@@ -13,7 +13,7 @@ class Repos: NSObject {
     var title: String?
     var owner: User?
     var viewers: [User]?
-    var images: [NSString]?
+    var images: [String]?
     
     private lazy var viewsLog: String = { [unowned self] in
         var log = "["
@@ -29,13 +29,13 @@ class Repos: NSObject {
     }()
     
     override var description: String {
-        return "title: \(title ?? ""),\nowner: {\(owner!)},\nviewers: \(viewsLog),\nimage:\(images!)"
+        return "title: \(title ?? ""),\nowner: {\(owner!)},\nviewers: \(viewsLog),\nimage:\(images ?? [])"
     }
 }
 
 extension Repos: Reflectable {
     
-    var reflectedObject: [String : AnyClass] {
+    var reflectedObject: [String : Any.Type] {
         return ["owner": User.self]
     }
 
@@ -43,8 +43,9 @@ extension Repos: Reflectable {
 
 extension Repos: ObjectingArray {
     
-    var objectInArray: [String : AnyClass] {
-        return ["viewers": User.self, "images": NSString.self]
+    var objectInArray: [String : Any.Type] {
+        return ["viewers": User.self, "images": String.self]
     }
     
 }
+

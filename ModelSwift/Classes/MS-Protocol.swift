@@ -26,7 +26,7 @@ public protocol Reflectable: class {
     ///
     /// - important: 当你的类中包含另外一个对象时，要实现该方法
     
-    var reflectedObject: [String: AnyClass] { get }
+    var reflectedObject: [String: Any.Type] { get }
     
 }
 
@@ -58,6 +58,11 @@ public protocol ObjectingArray {
     ///     }
     /// }
     /// ```
-    var objectInArray: [String: AnyClass] { get }
+    var objectInArray: [String: Any.Type] { get }
 }
 
+public protocol Ignorable {
+    
+    /// the store properties which will not be converted.
+    var ignoringProperty: [String] { get }
+}

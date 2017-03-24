@@ -50,7 +50,9 @@ infix operator =>
     return nil
 }
 
-fileprivate func convert(_ any: Any, to classType: AnyClass) -> Any? {
+fileprivate func convert(_ any: Any, to classType: Any.Type) -> Any? {
+    let type = Anything(reflecting: any)
+    //print("\(any)`s type is \(type.this)")
     
     if let dict = any as? [String: Any], !dict.isEmpty {
         
@@ -62,10 +64,11 @@ fileprivate func convert(_ any: Any, to classType: AnyClass) -> Any? {
         
     }
     
+    
     return any
 }
 
-fileprivate func convert(_ dict: [String: Any], to classType: AnyClass) -> NSObject? {
+fileprivate func convert(_ dict: [String: Any], to classType: Any.Type) -> NSObject? {
     
     if dict.isEmpty {
         return nil
@@ -75,10 +78,26 @@ fileprivate func convert(_ dict: [String: Any], to classType: AnyClass) -> NSObj
     guard let type = classType as? NSObject.Type else {
         return nil
     }
-    let object = type.init()
-    let mirror = Mirror(reflecting: object)
     
-    for (label, _) in mirror.children {
+    let object = type.init()
+    let any = Anything(reflecting: object)
+    var children = any.children
+
+//    if let obj = object as? Ignorable {
+//        
+//        children = children.filter{ $0.0! == obj.ignoringProperty.first! }
+//        
+//    }
+    
+    for (label, typeName) in children {
+        //print("\(label)`s type is \(type)")
+        
+        if let obj = object as? Ignorable {
+            
+            if obj.ignoringProperty.contains(label!) {
+                continue
+            }
+        }
         
         var jsonValue: Dictionary<String, Any>.Value? = nil
         
@@ -92,30 +111,35 @@ fileprivate func convert(_ dict: [String: Any], to classType: AnyClass) -> NSObj
             
         }
         
-        if let value = jsonValue {
+        if let value = jsonValue, let label = label {
             
             if value is NSNull { continue }
             
             // 如果 value 的值是字典
             if let dictValue = value as? [String: Any],
                 let obj = object as? Reflectable,
-                let _classType = obj.reflectedObject[label!] {
+                let _classType = obj.reflectedObject[label] {
                 
                 //print("--------Reflectable")
                 let _obj = convert(dictValue, to: _classType)
-                object.setValue(_obj, forKey: label!)
+                object.setValue(_obj, forKey: label)
                 
             } else if let dictValue = value as? [Any],
                 let obj  = object as? ObjectingArray,
-                let _classType = obj.objectInArray[label!] { // 如果 value 的值是数组
+                let _classType = obj.objectInArray[label] { // 如果 value 的值是数组
                 
                 //print("--------ObjectingArray")
+            
+                // FIXME: 类型不对导致崩溃 1 -> "1" or "1" -> 1
+                // TODO: 知道数组元素的类型，可以在这里将json转换成数组元素的类型
                 let _obj = dictValue.flatMap{ convert($0, to: _classType) }
-                object.setValue(_obj, forKey: label!)
+
+                
+                object.setValue(_obj, forKey: label)
                 
             } else {
                 
-                object.setValue(value , forKey: label!)
+                object.setValue(value , forKey: label)
                 
             }
             
