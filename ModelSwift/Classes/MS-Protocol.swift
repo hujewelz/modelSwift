@@ -1,9 +1,9 @@
 //
-//  MS-Protocol.swift
-//  Pods
+//  ViewController.swift
+//  ModelSwift
 //
-//  Created by jewelz on 2017/3/24.
-//
+//  Created by hujewelz on 03/23/2017.
+//  Copyright (c) 2017 hujewelz. All rights reserved.
 //
 
 import Foundation

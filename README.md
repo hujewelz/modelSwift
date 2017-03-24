@@ -5,10 +5,10 @@
 [![License](https://img.shields.io/cocoapods/l/ModelSwift.svg?style=flat)](http://cocoapods.org/pods/ModelSwift)
 [![Platform](https://img.shields.io/cocoapods/p/ModelSwift.svg?style=flat)](http://cocoapods.org/pods/ModelSwift)
 
-ModelSwift can conver our josn (or Data) to model in Swift.
+ModelSwift can convert josn (or Data) to model in Swift.
 
 ## Usage
-**:warning: In order to convert json（or Data） to model, our model must be a subclass of NSObject.**
+**:warning: In order to convert json（or Data） to model, the model  class must be a subclass of NSObject.**
 
 example:
 ```swift
@@ -21,10 +21,10 @@ class User: NSObject {
 class Repos: NSObject {
     var title: String?
     var owner: User?
-    var views: [User]?
+    var viewers: [User]?
 }
 ```
-You can map a json key or an array of json key  to one or multiple property name. 
+You can map a json key  to a property name. 
 just like this:
 
 ```json
@@ -32,7 +32,7 @@ just like this:
 {
  "title": "ModelSwift",
  "owner": { "name": "hujewelz", "age": 23, "description": "iOS Developer" },
- "views": [
+ "viewers": [
      { "name": "hujewelz", "age": 23, "description": "iOS Developer"},
      { "name": "bob", "age": 24 },
      { "name": "jobs", "age": 54 }
@@ -43,6 +43,9 @@ just like this:
 
 #### Match model property to different JSON key:
 ```
+var desc: String?
+...
+
 extension User: Replacable {
     var replacedProperty: [String : String] {
         return ["desc": "description" ]
@@ -51,6 +54,9 @@ extension User: Replacable {
 ```
 #### Property of object type:
 ```swift
+var owner: User? // an object
+...
+
 extension Repos: Reflectable {
     var reflectedObject: [String : AnyClass] {
         return ["owner": User.self]
@@ -60,9 +66,12 @@ extension Repos: Reflectable {
 
 #### Property in array:
 ```
+var viewers: [User]? // an object array
+...
+
 extension Repos: ObjectingArray {
     var objectInArray: [String : AnyClass] {
-        return ["views": User.self]
+        return ["viewers": User.self]
     }
 }
 

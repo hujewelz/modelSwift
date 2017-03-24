@@ -2,7 +2,7 @@
 //  ViewController.swift
 //  ModelSwift
 //
-//  Created by huluobobo on 03/23/2017.
+//  Created by hujewelz on 03/23/2017.
 //  Copyright (c) 2017 hujewelz. All rights reserved.
 //
 
@@ -79,11 +79,8 @@ fileprivate func convert(_ dict: [String: Any], to classType: AnyClass) -> NSObj
         
         var jsonValue: Dictionary<String, Any>.Value? = nil
         
-    
-        
         if let obj = object as? Replacable, let jsonKey = obj.replacedProperty[label!] {
-            print("--------Replacable")
-            
+            //print("--------Replacable")
             jsonValue = dict[jsonKey]
             
         } else if let key = label {
