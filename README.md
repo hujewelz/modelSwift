@@ -5,8 +5,10 @@
 [![License](https://img.shields.io/cocoapods/l/ModelSwift.svg?style=flat)](http://cocoapods.org/pods/ModelSwift)
 [![Platform](https://img.shields.io/cocoapods/p/ModelSwift.svg?style=flat)](http://cocoapods.org/pods/ModelSwift)
 
+ModelSwift can conver our josn (or Data) to model in Swift.
+
 ## Usage
-**:warning: In order to convert JSON（or Data） to model, our model must be a subclass of NSObject.**
+**:warning: In order to convert json（or Data） to model, our model must be a subclass of NSObject.**
 
 example:
 ```swift
