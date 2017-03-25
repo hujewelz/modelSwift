@@ -15,6 +15,7 @@ public enum Type<Value> {
     case string
     case double
     case float
+    case bool
     
     public var value: Any.Type? {
         switch self {
@@ -28,6 +29,8 @@ public enum Type<Value> {
             return Double.self
         case .string:
             return String.self
+        case .bool:
+            return Bool.self
         case .array(let v):
             if v is String.Type {
                 return String.self
@@ -37,6 +40,8 @@ public enum Type<Value> {
                 return Float.self
             } else if v is Double.Type {
                 return Double.self
+            } else if v is Bool.Type {
+                return Bool.self
             } else {
                 return v as? Any.Type
             }
@@ -51,7 +56,7 @@ public struct Reflection {
     
     
     /// type of the reflecting subject
-    public var this: Type<Any> {
+    public var subjectType: Type<Any> {
         let mirror = Mirror(reflecting: subject)
         return  typeOf(mirror.subjectType)
     }
@@ -99,12 +104,16 @@ public struct Reflection {
             return .float
         } else if subjectType is Double.Type || subjectType is Optional<Double>.Type {
             return .double
+        }  else if subjectType is Bool.Type || subjectType is Optional<Bool>.Type {
+            return .bool
         } else if subjectType is Array<String>.Type || subjectType is Optional<Array<String>>.Type {
             return .array(String.self)
         } else if subjectType is Array<Int>.Type || subjectType is Optional<Array<Int>>.Type {
             return .array(Int.self)
-        }else if subjectType is Array<Float>.Type || subjectType is Optional<Array<Float>>.Type {
+        } else if subjectType is Array<Float>.Type || subjectType is Optional<Array<Float>>.Type {
             return .array(Float.self)
+        } else if subjectType is Array<Bool>.Type || subjectType is Optional<Array<Bool>>.Type {
+            return .array(Bool.self)
         } else if subjectType is Array<Double>.Type || subjectType is Optional<Array<Double>>.Type {
             return .array(Double.self)
         }

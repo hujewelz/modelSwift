@@ -11,6 +11,8 @@ import Foundation
 
 infix operator ~>
 
+infix operator =>
+
 /// transform json or Data to a model object
 
 @discardableResult public func ~><T: NSObject>(lhs: Any, rhs: T.Type) -> T? {
@@ -25,8 +27,6 @@ infix operator ~>
     return nil
 }
 
-
-infix operator =>
 
 /// transform json or Data to an Array object
 
@@ -68,7 +68,7 @@ fileprivate func convert(_ dict: [String: Any], to classType: Any.Type) -> NSObj
     let any = Reflection(reflecting: object)
  
     for (label, type) in any.children where label != nil {
-        print("\(label)`s type is \(type)")
+        //debugPrint("\(label)`s type is \(type)")
         if let obj = object as? Ignorable {
             if obj.ignoredProperty.contains(label!) {
                 continue
@@ -123,13 +123,15 @@ fileprivate func convert(_ dict: [String: Any], to classType: Any.Type) -> NSObj
 private func convert(value: Any, to realType: Type<Any>) -> Any {
     let stringVaule = String(describing: value)
     
-    switch realType {
+    switch realType { 
     case .int:
         return Int(stringVaule) ?? 0
     case .float:
         return Float(stringVaule) ?? 0.0
     case .double:
         return Double(stringVaule) ?? 0.0
+    case .bool:
+        return Bool(stringVaule) ?? ((Int(stringVaule) ?? 0) > 0)
     case .string:
         return stringVaule
     case .array(let v):
@@ -141,6 +143,8 @@ private func convert(value: Any, to realType: Type<Any>) -> Any {
             return Float(stringVaule) ?? 0.0
         } else if v is Double.Type {
             return Double(stringVaule) ?? 0.0
+        } else if v is Bool.Type {
+            return Bool(stringVaule) ?? ((Int(stringVaule) ?? 0) > 0)
         } else {
             return value
         }
