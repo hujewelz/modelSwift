@@ -80,6 +80,7 @@ fileprivate func convert(_ dict: [String: Any], to classType: Any.Type) -> NSObj
         
         if let obj = object as? Replacable, let jsonKey = obj.replacedProperty[label!] {
             jsonValue = dict[jsonKey]
+            
         } else if let key = label {
             jsonValue = dict[key]
         }
@@ -100,10 +101,11 @@ fileprivate func convert(_ dict: [String: Any], to classType: Any.Type) -> NSObj
                 let obj  = object as? ObjectingArray,
                 let _classType = obj.objectInArray[label] { // 如果 value 的值是数组
                 
-                let convertedValue = dictValue.map{convert(value: $0, to: type)}
+                let convertedValue = dictValue.map{ convert(value: $0, to: type) }
                 //print("convertedValue: \(convertedValue)")
                 let _obj = convertedValue.map{ convert($0, to: _classType) }
                 object.setValue(_obj, forKey: label)
+                
             } else {
                 let v = convert(value: value, to: type)
                 print("set \(v) for \(label)")
