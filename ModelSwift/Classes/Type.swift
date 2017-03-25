@@ -40,8 +40,6 @@ public enum Type<Value> {
             } else {
                 return v as? Any.Type
             }
-        default:
-            return nil
         }
     }
     

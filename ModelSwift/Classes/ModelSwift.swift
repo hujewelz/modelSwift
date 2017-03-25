@@ -66,9 +66,8 @@ fileprivate func convert(_ dict: [String: Any], to classType: Any.Type) -> NSObj
     
     let object = type.init()
     let any = Reflection(reflecting: object)
-    var children = any.children
-    
-    for (label, type) in children where label != nil {
+ 
+    for (label, type) in any.children where label != nil {
         print("\(label)`s type is \(type)")
         if let obj = object as? Ignorable {
             if obj.ignoredProperty.contains(label!) {
@@ -132,7 +131,7 @@ private func convert(value: Any, to realType: Type<Any>) -> Any {
     case .double:
         return Double(stringVaule) ?? 0.0
     case .string:
-        return stringVaule ?? ""
+        return stringVaule
     case .array(let v):
         if v is String.Type {
             return stringVaule
