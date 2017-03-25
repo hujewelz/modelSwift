@@ -4,6 +4,7 @@
 [![Version](https://img.shields.io/cocoapods/v/ModelSwift.svg?style=flat)](http://cocoapods.org/pods/ModelSwift)
 [![License](https://img.shields.io/cocoapods/l/ModelSwift.svg?style=flat)](http://cocoapods.org/pods/ModelSwift)
 [![Platform](https://img.shields.io/cocoapods/p/ModelSwift.svg?style=flat)](http://cocoapods.org/pods/ModelSwift)
+[![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage)
 
 ModelSwift can convert josn (or Data) to model in Swift.
 
@@ -114,14 +115,20 @@ To run the example project, clone the repo, and run `pod install` from the Examp
 * Swift 3.0+
 
 ## Installation
-
+### CocoaPods
 ModelSwift is available through [CocoaPods](http://cocoapods.org). To install
 it, simply add the following line to your Podfile:
 
 ```ruby
 pod "ModelSwift"
 ```
+### Carthage
+[Carthage](https://github.com/Carthage/Carthage) is a decentralized dependency manager that builds your dependencies and provides you with binary frameworks.
 
+To integrate ModelSwift into your Xcode project using Carthage, specify it in your Cartfile:
+```ruby
+github "hujewelz/modelSwift"
+```
 ## Author
 
 hujewelz
