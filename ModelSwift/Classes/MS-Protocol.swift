@@ -64,5 +64,5 @@ public protocol ObjectingArray {
 public protocol Ignorable {
     
     /// the store properties which will not be converted.
-    var ignoringProperty: [String] { get }
+    var ignoredProperty: [String] { get }
 }

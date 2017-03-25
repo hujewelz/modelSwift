@@ -9,12 +9,13 @@ ModelSwift can convert josn (or Data) to model in Swift.
 
 ## Usage
 **:warning: In order to convert json（or Data） to model, the model  class must be a subclass of NSObject.**
+**:warning: If the stored property is Int, Float, Double .etc, it should not   be optional.**
 
 example:
 ```swift
 class User: NSObject {
     var name: String?
-    var age = 0
+    var age = 0 // not var age: Int?
     var desc: String?
 }
 
@@ -92,6 +93,18 @@ if let users = array => User.self {
 }
 
 ```
+
+#### ignored property
+```
+extension User: Ignorable {
+    /// the store properties can not to be converted.
+    var ignoredProperty: [String] {
+        return ["name"]
+    }
+
+}
+```
+
 To run the example project, clone the repo, and run `pod install` from the Example directory first.
 
 ## Requirements

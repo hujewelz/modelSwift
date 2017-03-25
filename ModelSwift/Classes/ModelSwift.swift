@@ -65,13 +65,13 @@ fileprivate func convert(_ dict: [String: Any], to classType: Any.Type) -> NSObj
     }
     
     let object = type.init()
-    let any = Anything(reflecting: object)
+    let any = Reflection(reflecting: object)
     var children = any.children
     
     for (label, type) in children where label != nil {
         print("\(label)`s type is \(type)")
         if let obj = object as? Ignorable {
-            if obj.ignoringProperty.contains(label!) {
+            if obj.ignoredProperty.contains(label!) {
                 continue
             }
         }

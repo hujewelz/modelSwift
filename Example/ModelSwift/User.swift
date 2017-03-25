@@ -30,7 +30,7 @@ extension User: Replacable {
 
 extension User: Ignorable {
     /// the store properties can not to be converted.
-    var ignoringProperty: [String] {
+    var ignoredProperty: [String] {
         return ["name"]
     }
 

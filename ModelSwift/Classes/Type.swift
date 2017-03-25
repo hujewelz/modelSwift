@@ -47,7 +47,7 @@ public enum Type<Value> {
     
 }
 
-public struct Anything {
+public struct Reflection {
 
     public let subject: Any
     
@@ -64,7 +64,7 @@ public struct Anything {
     
     public typealias Child = (label: String?, type: Type<Any>)
     
-    public typealias Children = [Anything.Child]
+    public typealias Children = [Child]
     
     public init(reflecting subject: Any) {
         self.subject = subject
