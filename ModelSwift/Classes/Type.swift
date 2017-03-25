@@ -8,23 +8,44 @@
 
 import Foundation
 
-//public enum Type<Value> {
-//    case type(Value)
-//    case int
-//    case string
-//    case double
-//    
-//    //let anyClass: Value
-//        
-//    public var value: Value? {
-//        switch self {
-//        case .type(let value):
-//            return value
-//        default:
-//            return nil
-//        }
-//    }
-//}
+public enum Type<Value> {
+    case some(Value)
+    case array(Value)
+    case int
+    case string
+    case double
+    case float
+    
+    public var value: Any.Type? {
+        switch self {
+        case .some(let v):
+            return v as? Any.Type
+        case .int:
+            return Int.self
+        case .float:
+            return Float.self
+        case .double:
+            return Double.self
+        case .string:
+            return String.self
+        case .array(let v):
+            if v is String.Type {
+                return String.self
+            } else if v is Int.Type {
+                return Int.self
+            } else if v is Float.Type {
+                return Float.self
+            } else if v is Double.Type {
+                return Double.self
+            } else {
+                return v as? Any.Type
+            }
+        default:
+            return nil
+        }
+    }
+    
+}
 
 public struct Anything {
 
@@ -32,23 +53,21 @@ public struct Anything {
     
     
     /// type of the reflecting subject
-    public var this: Any.Type {
+    public var this: Type<Any> {
         let mirror = Mirror(reflecting: subject)
-        return  mirror.subjectType
+        return  typeOf(mirror.subjectType)
     }
     
     /// An element of the reflected instance's structure.  The optional
     /// `label` may be used to represent the name
     /// of a stored property, and `type` is the stored property`s type.
     
-    public typealias Child = (label: String?, type: Any.Type)
+    public typealias Child = (label: String?, type: Type<Any>)
     
     public typealias Children = [Anything.Child]
     
     public init(reflecting subject: Any) {
         self.subject = subject
-        
-       
     }
     
     /// A collection of `Child` elements describing the structure of the
@@ -65,20 +84,33 @@ public struct Anything {
         return results
     }
     
-    private func subjectType(of subject: Any) -> Any.Type {
+    private func subjectType(of subject: Any) -> Type<Any> {
         let mirror = Mirror(reflecting: subject)
         let subjectType = mirror.subjectType
         
-        // TODO: 将数组的各种类型转换成自己的类型
-        if subjectType is Array<Int>.Type || subjectType is Optional<Int>.Type {
-            //arrayType.Element
-            print("array Int Type")
-        } else if subjectType is Array<String>.Type || subjectType is Optional<String>.Type {
-            print("array String Type")
+        return typeOf(subjectType)
+    }
+    
+    private func typeOf(_ subjectType: Any.Type) -> Type<Any> {
+        //print("subject type: \(subjectType)")
+        if subjectType is Int.Type || subjectType is Optional<Int>.Type {
+            return .int
+        } else if subjectType is String.Type || subjectType is Optional<String>.Type {
+            return .string
+        } else if subjectType is Float.Type || subjectType is Optional<Float>.Type {
+            return .float
+        } else if subjectType is Double.Type || subjectType is Optional<Double>.Type {
+            return .double
+        } else if subjectType is Array<String>.Type || subjectType is Optional<Array<String>>.Type {
+            return .array(String.self)
+        } else if subjectType is Array<Int>.Type || subjectType is Optional<Array<Int>>.Type {
+            return .array(Int.self)
+        }else if subjectType is Array<Float>.Type || subjectType is Optional<Array<Float>>.Type {
+            return .array(Float.self)
+        } else if subjectType is Array<Double>.Type || subjectType is Optional<Array<Double>>.Type {
+            return .array(Double.self)
         }
-        
-        
-        return subjectType
+        return .some(subjectType)
     }
 
 }

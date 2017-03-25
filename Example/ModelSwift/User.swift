@@ -17,6 +17,7 @@ class User: NSObject {
     override var description: String {
         return "name: \(name ?? "unknow"), age: \(age), description: \(desc ?? "null")"
     }
+    
 }
 
 extension User: Replacable {
@@ -32,5 +33,5 @@ extension User: Ignorable {
     var ignoringProperty: [String] {
         return ["name"]
     }
-    
+
 }
