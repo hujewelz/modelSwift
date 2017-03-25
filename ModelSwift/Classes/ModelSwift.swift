@@ -101,15 +101,17 @@ fileprivate func convert(_ dict: [String: Any], to classType: Any.Type) -> NSObj
                 let obj  = object as? ObjectingArray,
                 let _classType = obj.objectInArray[label] { // 如果 value 的值是数组
                 
+                // 首先要将数组中的元素转换成模型中的类型，例如json中images=[1,2], model中images为[String], 则需要转换
                 let convertedValue = dictValue.map{ convert(value: $0, to: type) }
                 //print("convertedValue: \(convertedValue)")
                 let _obj = convertedValue.map{ convert($0, to: _classType) }
                 object.setValue(_obj, forKey: label)
                 
             } else {
-                let v = convert(value: value, to: type)
-                print("set \(v) for \(label)")
-                object.setValue(v , forKeyPath: label)
+                // 将json中元素转换成模型中的类型，例如json中age="23", model中age为Int, 则需要转换
+                let convertedValue = convert(value: value, to: type)
+               
+                object.setValue(convertedValue , forKeyPath: label)
             }
         }
         
