@@ -45,7 +45,8 @@ just like this:
 ```
 
 #### Match model property to different JSON key:
-```
+
+```swift
 var desc: String?
 ...
 
@@ -56,6 +57,7 @@ extension User: Replacable {
 }
 ```
 #### Property of object type:
+
 ```swift
 var owner: User? // an object
 ...
@@ -68,7 +70,8 @@ extension Repos: Reflectable {
 ```
 
 #### Property in array:
-```
+
+```swift
 var viewers: [User]? // an object array
 ...
 
@@ -81,19 +84,40 @@ extension Repos: ObjectingArray {
 ```
 
 #### ignored property
-```
+
+```swift
 extension User: Ignorable {
 /// the store properties can not to be converted.
-var ignoredProperty: [String] {
-return ["name"]
-}
+    var ignoredProperty: [String] {
+    return ["name"]
+    }
 
 }
+```
+
+If the type of an object in json cannot be matched to the property of the model, it can be coverted too.
+
+eg.
+```
+// JSON
+{
+    "name": "jewelz"
+    "age": "24"     // string => Int
+    "isNew": "1223" // string => Bool
+}
+
+// model
+
+var name: String?
+var age = 0         // 24 
+var isNew = false  // true
+
 ```
 
 When we got the data from our server, we can use 
 `func ~><T: NSObject>(lhs: Any, rhs: T.Type) -> T? ` or `func =><T: NSObject>(lhs: Any, rhs: T.Type) -> [T]?`
  to convert it to model or a model array:
+
 ```swift
 // convert to a model object
 if let repos = dict ~> Repos.self {
