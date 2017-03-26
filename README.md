@@ -80,6 +80,17 @@ extension Repos: ObjectingArray {
 
 ```
 
+#### ignored property
+```
+extension User: Ignorable {
+/// the store properties can not to be converted.
+var ignoredProperty: [String] {
+return ["name"]
+}
+
+}
+```
+
 When we got the data from our server, we can use 
 `func ~><T: NSObject>(lhs: Any, rhs: T.Type) -> T? ` or `func =><T: NSObject>(lhs: Any, rhs: T.Type) -> [T]?`
  to convert it to model or a model array:
@@ -94,17 +105,6 @@ if let users = array => User.self {
 	print(users)
 }
 
-```
-
-#### ignored property
-```
-extension User: Ignorable {
-    /// the store properties can not to be converted.
-    var ignoredProperty: [String] {
-        return ["name"]
-    }
-
-}
 ```
 
 To run the example project, clone the repo, and run `pod install` from the Example directory first.

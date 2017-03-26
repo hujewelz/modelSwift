@@ -13,8 +13,11 @@ infix operator ~>
 
 infix operator =>
 
-/// transform json or Data to a model object
-
+/// convert json or Data into a model object.
+///
+/// - Parameter lhs: a json or Data to be converted.
+/// - Parameter rhs: type of model.
+/// - Returns: the converted model.
 @discardableResult public func ~><T: NSObject>(lhs: Any, rhs: T.Type) -> T? {
     
     if let data = lhs as? Data, let json = (try? JSONSerialization.jsonObject(with: data, options: [])) as? [String : Any] {
@@ -28,7 +31,11 @@ infix operator =>
 }
 
 
-/// transform json or Data to an Array object
+/// convert json or Data into a model array.
+///
+/// - Parameter lhs: a json or Data to be converted.
+/// - Parameter rhs: type of model.
+/// - Returns: the converted model array.
 
 @discardableResult public func =><T: NSObject>(lhs: Any, rhs: T.Type) -> [T]? {
     
@@ -47,7 +54,7 @@ fileprivate func convert(_ any: Any, to classType: Any.Type) -> Any? {
     if let dict = any as? [String: Any], !dict.isEmpty {
         return convert(dict, to: classType)
     } else if let array = any as? [Any] {
-        return array.map{ convert($0, to: classType)}
+        return array.flatMap{ convert($0, to: classType)}
     }
     
     return any
@@ -65,26 +72,26 @@ fileprivate func convert(_ dict: [String: Any], to classType: Any.Type) -> NSObj
     }
     
     let object = type.init()
-    let any = Reflection(reflecting: object)
+    let any = Image(reflecting: object)
  
-    for (label, type) in any.children where label != nil {
+    for case let(label?, type) in any.children {
         //debugPrint("\(label)`s type is \(type)")
         if let obj = object as? Ignorable {
-            if obj.ignoredProperty.contains(label!) {
+            if obj.ignoredProperty.contains(label) {
                 continue
             }
         }
         
         var jsonValue: Dictionary<String, Any>.Value? = nil
         
-        if let obj = object as? Replacable, let jsonKey = obj.replacedProperty[label!] {
+        if let obj = object as? Replacable, let jsonKey = obj.replacedProperty[label] {
             jsonValue = dict[jsonKey]
             
-        } else if let key = label {
-            jsonValue = dict[key]
+        } else {
+            jsonValue = dict[label]
         }
         
-        if let value = jsonValue, let label = label {
+        if let value = jsonValue {
             
             if value is NSNull { continue }
             
@@ -101,9 +108,9 @@ fileprivate func convert(_ dict: [String: Any], to classType: Any.Type) -> NSObj
                 let _classType = obj.objectInArray[label] { // 如果 value 的值是数组
                 
                 // 首先要将数组中的元素转换成模型中的类型，例如json中images=[1,2], model中images为[String], 则需要转换
-                let convertedValue = dictValue.map{ convert(value: $0, to: type) }
+                let convertedValue = dictValue.flatMap{ convert(value: $0, to: type) }
                 //print("convertedValue: \(convertedValue)")
-                let _obj = convertedValue.map{ convert($0, to: _classType) }
+                let _obj = convertedValue.flatMap{ convert($0, to: _classType) }
                 object.setValue(_obj, forKey: label)
                 
             } else {
@@ -120,7 +127,7 @@ fileprivate func convert(_ dict: [String: Any], to classType: Any.Type) -> NSObj
 }
 
 
-private func convert(value: Any, to realType: Type<Any>) -> Any {
+private func convert(value: Any, to realType: Type<Any>) -> Any? {
     let stringVaule = String(describing: value)
     
     switch realType { 
@@ -134,6 +141,8 @@ private func convert(value: Any, to realType: Type<Any>) -> Any {
         return Bool(stringVaule) ?? ((Int(stringVaule) ?? 0) > 0)
     case .string:
         return stringVaule
+    case .none:
+        return nil
     case .array(let v):
         if v is String.Type {
             return stringVaule

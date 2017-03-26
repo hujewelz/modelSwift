@@ -48,7 +48,7 @@ public protocol Replacable {
 }
 
 public protocol ObjectingArray {
-    /// model object in array
+    /// Model object in array.
     /// ```
     /// class Repos: NSObject, ObjectingArray {
     ///     var followers: [User]?
@@ -63,6 +63,6 @@ public protocol ObjectingArray {
 
 public protocol Ignorable {
     
-    /// the store properties which will not be converted.
+    /// Properties which will not be converted.
     var ignoredProperty: [String] { get }
 }

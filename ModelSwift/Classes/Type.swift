@@ -16,6 +16,7 @@ public enum Type<Value> {
     case double
     case float
     case bool
+    case none
     
     public var value: Any.Type? {
         switch self {
@@ -31,6 +32,8 @@ public enum Type<Value> {
             return String.self
         case .bool:
             return Bool.self
+        case .none:
+            return nil
         case .array(let v):
             if v is String.Type {
                 return String.self
@@ -50,7 +53,7 @@ public enum Type<Value> {
     
 }
 
-public struct Reflection {
+public struct Image {
 
     public let subject: Any
     
@@ -89,6 +92,7 @@ public struct Reflection {
     
     private func subjectType(of subject: Any) -> Type<Any> {
         let mirror = Mirror(reflecting: subject)
+        
         let subjectType = mirror.subjectType
         
         return typeOf(subjectType)
